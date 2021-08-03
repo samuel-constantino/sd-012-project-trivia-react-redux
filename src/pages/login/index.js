@@ -1,13 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect, Link } from 'react-router-dom';
+import setUser from '../../redux/actions/userActions';
 
 class Login extends React.Component {
   constructor() {
     super();
     this.formHandler = this.formHandler.bind(this);
+    this.routeChange = this.routeChange.bind(this);
     this.state = {
       email: '',
       name: '',
+      redirect: false,
     };
   }
 
@@ -17,8 +22,21 @@ class Login extends React.Component {
     });
   }
 
-  render() {
+  routeChange() {
+    const { sendUserAndToken } = this.props;
     const { email, name } = this.state;
+    fetch('https://opentdb.com/api_token.php?command=request')
+      .then((r) => r.json())
+      .then(({ token }) => {
+        sendUserAndToken({ email, name, token });
+        localStorage.setItem('token', JSON.stringify(token));
+        this.setState({ redirect: true });
+      });
+  }
+
+  render() {
+    const { email, name, redirect } = this.state;
+    if (redirect) return (<Redirect to="/game" />);
     return (
       <div>
         <form>
@@ -42,7 +60,12 @@ class Login extends React.Component {
               data-testid="input-gravatar-email"
             />
           </label>
-          <button disabled={ !(email && name) } type="button" data-testid="btn-play">
+          <button
+            disabled={ !(email && name) }
+            type="button"
+            data-testid="btn-play"
+            onClick={ this.routeChange }
+          >
             Jogar
           </button>
         </form>
@@ -56,4 +79,10 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  sendUserAndToken: (e) => dispatch(setUser(e)) });
+
+Login.propTypes = {
+  sendUserAndToken: PropTypes.func.isRequired,
+};
+export default connect(null, mapDispatchToProps)(Login);
