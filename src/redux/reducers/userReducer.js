@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
   user: {
-
+    email: '',
+    name: '',
   },
 };
 
