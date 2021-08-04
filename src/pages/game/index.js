@@ -18,7 +18,8 @@ class Game extends React.Component {
 
   async fetchQuestions() {
     // Precisa pegar o token do redux
-    const request = await fetch('https://opentdb.com/api.php?amount=5&token=b19f27ec325809e22b60bc0d90d61d5020610e109c537d7def0d91611342ed17');
+    const token = localStorage.getItem('token').replace(/"/g, '');
+    const request = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
     const data = await request.json();
     this.setState({
       questions: [...data.results],
