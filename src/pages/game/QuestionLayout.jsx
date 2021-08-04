@@ -1,12 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import NextButton from './nextButton';
 
 class QuestionLayout extends React.Component {
   constructor() {
     super();
+    this.checkAnswer = this.checkAnswer.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.state = {
       correct: '',
       wrong: '',
+      question: 0,
+      hidden: true,
       showNextButton: false,
       timeCount: 30,
     };
@@ -54,16 +59,27 @@ class QuestionLayout extends React.Component {
     this.setState({
       correct: 'correct',
       wrong: 'wrong',
+      hidden: false,
     });
   }
 
+  handleClick() {
+    this.setState((state) => ({
+      ...state,
+      question: state.question + 1,
+      hidden: true,
+      correct: '',
+      wrong: '',
+    }));
+  }
+
   render() {
-    const { correct, wrong, timeCount } = this.state;
+    const { correct, wrong, hidden, question, timeCount } = this.state;
     const { questions } = this.props;
     return (
       <>
-        <h1 data-testid="question-category">{questions[0].category}</h1>
-        <p data-testid="question-text">{questions[0].question}</p>
+        <h1 data-testid="question-category">{questions[question].category}</h1>
+        <p data-testid="question-text">{questions[question].question}</p>
         <span>{timeCount}</span>
         <button
           className={ correct }
@@ -72,11 +88,11 @@ class QuestionLayout extends React.Component {
           onClick={ this.checkAnswer }
           disabled={ timeCount === 0 || this.handleDisableButtons() }
         >
-          {questions[0].correct_answer}
+          {questions[question].correct_answer}
 
         </button>
         {
-          questions[0].incorrect_answers
+          questions[question].incorrect_answers
             .map((e, index) => (
               <button
                 className={ wrong }
@@ -89,6 +105,10 @@ class QuestionLayout extends React.Component {
                 {e}
               </button>))
         }
+        <NextButton
+          onClick={ this.handleClick }
+          hidden={ hidden }
+        />
       </>
     );
   }

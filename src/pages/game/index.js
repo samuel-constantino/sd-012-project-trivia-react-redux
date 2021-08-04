@@ -34,9 +34,10 @@ class Game extends React.Component {
     return (
       <>
         <Header />
-        <QuestionLayout questions={ questions } />
+        <QuestionLayout
+          questions={ questions }
+        />
       </>
-
     );
   }
 }
