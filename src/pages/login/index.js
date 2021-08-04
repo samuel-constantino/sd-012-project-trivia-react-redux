@@ -38,7 +38,7 @@ class Login extends React.Component {
     const { email, name, redirect } = this.state;
     if (redirect) return (<Redirect to="/game" />);
     return (
-      <div>
+      <>
         <form>
           <label htmlFor="input-player-name">
             Nome
@@ -74,7 +74,7 @@ class Login extends React.Component {
             Configurações
           </button>
         </Link>
-      </div>
+      </>
     );
   }
 }
@@ -85,4 +85,5 @@ const mapDispatchToProps = (dispatch) => ({
 Login.propTypes = {
   sendUserAndToken: PropTypes.func.isRequired,
 };
+
 export default connect(null, mapDispatchToProps)(Login);
