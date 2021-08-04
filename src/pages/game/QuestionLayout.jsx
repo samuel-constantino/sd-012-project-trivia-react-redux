@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import NextButton from './nextButton';
+import { submitScore } from '../../redux/actions/submitScoreAction';
 
 class QuestionLayout extends React.Component {
   constructor() {
@@ -55,7 +57,30 @@ class QuestionLayout extends React.Component {
     return false;
   }
 
-  checkAnswer() {
+  scoreCalculation() {
+    const { questions } = this.props;
+    const { timeCount, question } = this.state;
+
+    const { difficulty } = questions[question];
+    const defaultNum = 10;
+    const weights = { hard: 3, medium: 2, easy: 1 };
+
+    const score = (defaultNum + (timeCount * weights[difficulty]));
+    return score;
+  }
+
+  checkAnswer({ target }) {
+    clearInterval(this.myInterval);
+    const { setScore } = this.props;
+
+    if (target.id) {
+      const { player } = JSON.parse(localStorage.getItem('state'));
+      player.score += this.scoreCalculation();
+      player.assertions += 1;
+      localStorage.setItem('state', JSON.stringify({ player: { ...player } }));
+      setScore(player.score);
+    }
+
     this.setState({
       correct: 'correct',
       wrong: 'wrong',
@@ -84,6 +109,7 @@ class QuestionLayout extends React.Component {
         <button
           className={ correct }
           type="button"
+          id="correct"
           data-testid="correct-answer"
           onClick={ this.checkAnswer }
           disabled={ timeCount === 0 || this.handleDisableButtons() }
@@ -116,6 +142,11 @@ class QuestionLayout extends React.Component {
 
 QuestionLayout.propTypes = {
   questions: PropTypes.arrayOf(Object).isRequired,
+  setScore: PropTypes.func.isRequired,
 };
 
-export default QuestionLayout;
+const mapDispatchToProps = (dispatch) => ({
+  setScore: (value) => dispatch(submitScore(value)),
+});
+
+export default connect(null, mapDispatchToProps)(QuestionLayout);
