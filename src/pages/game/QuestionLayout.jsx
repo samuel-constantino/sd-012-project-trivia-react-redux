@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import NextButton from './nextButton';
 import { submitScore } from '../../redux/actions/submitScoreAction';
 
@@ -85,6 +86,7 @@ class QuestionLayout extends React.Component {
       correct: 'correct',
       wrong: 'wrong',
       hidden: false,
+      timeCount: 30,
     });
   }
 
@@ -95,12 +97,15 @@ class QuestionLayout extends React.Component {
       hidden: true,
       correct: '',
       wrong: '',
-    }));
+    }), () => this.timeCounter());
   }
 
   render() {
     const { correct, wrong, hidden, question, timeCount } = this.state;
     const { questions } = this.props;
+    if (questions[question] === undefined) {
+      return <Redirect to="/feedback" />;
+    }
     return (
       <>
         <h1 data-testid="question-category">{questions[question].category}</h1>
