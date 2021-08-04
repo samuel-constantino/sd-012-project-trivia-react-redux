@@ -50,6 +50,7 @@ class QuestionLayout extends React.Component {
     }, intervalTimer);
   }
 
+  // deve desabilitar ou não os botões de resposta:
   handleDisableButtons() {
     const { showNextButton } = this.state;
     if (showNextButton) {
