@@ -80,7 +80,7 @@ class QuestionLayout extends React.Component {
       player.score += this.scoreCalculation();
       player.assertions += 1;
       localStorage.setItem('state', JSON.stringify({ player: { ...player } }));
-      setScore(player.score);
+      setScore(player);
     }
 
     this.setState({
@@ -152,7 +152,7 @@ QuestionLayout.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  setScore: (value) => dispatch(submitScore(value)),
+  setScore: ({ score, assertions }) => dispatch(submitScore(score, assertions)),
 });
 
 export default connect(null, mapDispatchToProps)(QuestionLayout);

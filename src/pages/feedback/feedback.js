@@ -57,8 +57,8 @@ Feedback.propTypes = {
 }.isRequired;
 
 const mapStateToProps = (state) => ({
-  totalScore: state.ScoreReducer.totalScore,
-  totalAssertions: state.ScoreReducer.totalAssertions,
+  totalScore: state.scoreReducer.totalScore,
+  totalAssertions: state.scoreReducer.totalAssertions,
 });
 
 export default connect(mapStateToProps)(Feedback);

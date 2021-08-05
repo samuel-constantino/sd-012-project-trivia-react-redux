@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   totalAssertions: 0,
 };
 
-function ScoreReducer(state = INITIAL_STATE, action) {
+function scoreReducer(state = INITIAL_STATE, action) {
   const { type, totalScore, totalAssertions } = action;
   switch (type) {
   case SUBMIT_SCORE:
@@ -15,4 +15,4 @@ function ScoreReducer(state = INITIAL_STATE, action) {
   }
 }
 
-export default ScoreReducer;
+export default scoreReducer;
