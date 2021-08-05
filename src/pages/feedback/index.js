@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Header from '../game/Header';
 
@@ -15,38 +16,34 @@ class Feedback extends React.Component {
 
   renderFeedback() {
     const scoreToBeat = 3;
-    const { totalScore, totalAssertions } = this.state;
+    const { totalAssertions } = this.state;
     if (totalAssertions < scoreToBeat) {
       return (
-        <div>
-          <p data-testid="feedback-text">Podia ser melhor...</p>
-          <p data-testid="feedback-total-question">
-            {totalAssertions}
-          </p>
-          <p data-testid="feedback-total-score">
-            {totalScore}
-          </p>
-        </div>
+        <p data-testid="feedback-text">Podia ser melhor...</p>
       );
     }
     return (
-      <div>
-        <p data-testid="feedback-text">Mandou bem!</p>
+      <p data-testid="feedback-text">Mandou bem!</p>
+    );
+  }
+
+  render() {
+    const { totalScore, totalAssertions } = this.state;
+    return (
+      <>
+        <Header />
+        { this.renderFeedback() }
         <p data-testid="feedback-total-question">
           {totalAssertions}
         </p>
         <p data-testid="feedback-total-score">
           {totalScore}
         </p>
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <>
-        <Header />
-        { this.renderFeedback() }
+        <Link to="/">
+          <button data-testid="btn-play-again" type="button">
+            Jogar novamente
+          </button>
+        </Link>
       </>
     );
   }
