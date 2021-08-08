@@ -99,7 +99,8 @@ class QuestionLayout extends React.Component {
     const picture = `https://www.gravatar.com/avatar/${md5(gravatarEmail).toString()}`;
     if (ranking) {
       localStorage.setItem('ranking', JSON
-        .stringify([...ranking, { name, score, picture }]));
+        .stringify([...ranking, { name, score, picture }]
+          .sort((a, b) => b.score - a.score)));
     } else {
       localStorage.setItem('ranking', JSON
         .stringify([{ name, score, picture }]));
