@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import md5 from 'crypto-js/md5';
 import NextButton from './nextButton';
 import { submitScore } from '../../redux/actions/submitScoreAction';
 
@@ -91,6 +92,21 @@ class QuestionLayout extends React.Component {
     });
   }
 
+  storeInTheRanking() {
+    const ranking = JSON.parse(localStorage.getItem('ranking'));
+    const { player: { name, score, gravatarEmail } } = JSON
+      .parse(localStorage.getItem('state'));
+    const picture = `https://www.gravatar.com/avatar/${md5(gravatarEmail).toString()}`;
+    if (ranking) {
+      localStorage.setItem('ranking', JSON
+        .stringify([...ranking, { name, score, picture }]
+          .sort((a, b) => b.score - a.score)));
+    } else {
+      localStorage.setItem('ranking', JSON
+        .stringify([{ name, score, picture }]));
+    }
+  }
+
   handleClick() {
     this.setState((state) => ({
       ...state,
@@ -105,6 +121,7 @@ class QuestionLayout extends React.Component {
     const { correct, wrong, hidden, question, timeCount } = this.state;
     const { questions } = this.props;
     if (questions[question] === undefined) {
+      this.storeInTheRanking();
       return <Redirect to="/feedback" />;
     }
     return (
