@@ -104,13 +104,9 @@ class QuestionLayout extends React.Component {
   render() {
     const { correct, wrong, hidden, question, timeCount } = this.state;
     const { questions } = this.props;
-<<<<<<< HEAD
-    console.log(question);
-=======
     if (questions[question] === undefined) {
       return <Redirect to="/feedback" />;
     }
->>>>>>> 30a213e984428a3d3cb1a157efa8abca017ee2e2
     return (
       <>
         <h1 data-testid="question-category">{questions[question].category}</h1>
