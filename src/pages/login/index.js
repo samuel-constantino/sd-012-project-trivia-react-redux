@@ -29,9 +29,20 @@ class Login extends React.Component {
       .then((r) => r.json())
       .then(({ token }) => {
         sendUserAndToken({ email, name, token });
-        localStorage.setItem('token', JSON.stringify(token));
+        this.storeUserData(email, name, token);
         this.setState({ redirect: true });
       });
+  }
+
+  storeUserData(email, name, token) {
+    localStorage.setItem('token', JSON.stringify(token));
+    localStorage.setItem('state', JSON.stringify({ player: {
+      name,
+      assertions: 0,
+      score: 0,
+      gravatarEmail: email,
+    },
+    }));
   }
 
   render() {
