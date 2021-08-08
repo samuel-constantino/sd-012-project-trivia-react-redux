@@ -76,6 +76,7 @@ class QuestionLayout extends React.Component {
   render() {
     const { correct, wrong, hidden, question, timeCount } = this.state;
     const { questions } = this.props;
+    console.log(question);
     return (
       <>
         <h1 data-testid="question-category">{questions[question].category}</h1>
