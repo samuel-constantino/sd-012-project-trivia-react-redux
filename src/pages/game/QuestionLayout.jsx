@@ -126,6 +126,7 @@ class QuestionLayout extends React.Component {
     }
     return (
       <>
+        {console.log(questions)}
         <h1 data-testid="question-category">{questions[question].category}</h1>
         <p data-testid="question-text">{questions[question].question}</p>
         <span>{timeCount}</span>

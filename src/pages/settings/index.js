@@ -3,20 +3,10 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setCategory } from '../../redux/actions/settingActions';
-import categories from '../../data';
+import { setCategory, setDifficulty, setType } from '../../redux/actions/settingActions';
+import { categories, difficulty, types } from '../../data';
 
 class Settings extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = ({
-      categorySelected: '',
-    });
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
   categoryOptions(category) {
     return {
       value: category,
@@ -24,40 +14,52 @@ class Settings extends React.Component {
     };
   }
 
-  handleChange(categorySelected) {
-    this.setState((state) => ({
-      ...state,
-      categorySelected,
-    }));
+  difficultyOptions(diff) {
+    return {
+      value: diff,
+      label: diff,
+    };
   }
 
-  handleClick() {
-    const { categorySelected } = this.state;
-    const { setCategoryToStore } = this.props;
-    setCategoryToStore(categorySelected.value);
+  typeOptions(type) {
+    return {
+      value: type.value,
+      label: type.label,
+    };
   }
 
   render() {
+    const { setCategoryToStore, setDifficultyToStore, setTypeToStore } = this.props;
     const categoryOptions = categories.map((category) => this.categoryOptions(category));
+    const typeOptions = types.map((type) => this.typeOptions(type));
+
+    const difficultyOptions = difficulty.map((
+      category,
+    ) => this.difficultyOptions(category));
+
     return (
       <div>
         <h1 data-testid="settings-title">Configurações</h1>
         <Select
           placeholder="Categoria"
           options={ categoryOptions }
-          onChange={ this.handleChange }
+          onChange={ ({ value }) => setCategoryToStore(value) }
+        />
+        <Select
+          placeholder="Dificuldade"
+          options={ difficultyOptions }
+          onChange={ ({ value }) => setDifficultyToStore(value) }
+        />
+        <Select
+          placeholder="Tipo"
+          options={ typeOptions }
+          onChange={ ({ value }) => setTypeToStore(value) }
         />
         <Link to="/">
           <button type="button">
             Voltar
           </button>
         </Link>
-        <button
-          type="button"
-          onClick={ this.handleClick }
-        >
-          Salvar
-        </button>
       </div>
     );
   }
@@ -69,6 +71,8 @@ Settings.propTypes = {
 
 const mapDispatchToProps = (dispatch) => ({
   setCategoryToStore: (category) => dispatch(setCategory(category)),
+  setDifficultyToStore: (value) => dispatch(setDifficulty(value)),
+  setTypeToStore: (type) => dispatch(setType(type)),
 });
 
 export default connect(null, mapDispatchToProps)(Settings);
