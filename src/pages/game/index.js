@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import QuestionLayout from './QuestionLayout';
 import Header from './Header';
+import categories from '../../data';
 
 class Game extends React.Component {
   constructor() {
@@ -17,9 +20,17 @@ class Game extends React.Component {
   }
 
   async fetchQuestions() {
+    const { getCategory } = this.props;
+    let category;
+    const primeiroIndex = 8;
+    categories.forEach((c, index) => {
+      if (c === getCategory) category = index + primeiroIndex; // esse primeiroIndex precisa ser incrementado porque na API, o index da primeira caregoria é 9 (menos o primeiro índex, 'Any Category, ficando 8 como index inicial)
+    });
     // Precisa pegar o token do redux
     const token = JSON.parse(localStorage.getItem('token'));
-    const request = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
+
+    const request = getCategory === 'Any Category' ? await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`)
+      : await fetch(`https://opentdb.com/api.php?amount=5&token=${token}&category=${category}`);
     const { results } = await request.json();
     this.setState({
       questions: [...results],
@@ -42,4 +53,12 @@ class Game extends React.Component {
   }
 }
 
-export default Game;
+Game.propTypes = {
+  getCategory: PropTypes.string,
+}.isRequired;
+
+const mapStateToProps = (state) => ({
+  getCategory: state.settingReducer.category,
+});
+
+export default connect(mapStateToProps)(Game);
